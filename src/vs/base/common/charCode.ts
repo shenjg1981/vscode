@@ -9,6 +9,8 @@
  * An inlined enum containing useful character codes (to be used with String.charCodeAt).
  * Please leave the const keyword such that it gets inlined when compiled to JavaScript!
  */
+// const 枚举会在 typescript 编译期间被删除，const 枚举成员在使用的地方会被内联进来，避免额外的性能开销
+
 export const enum CharCode {
 	Null = 0,
 	/**

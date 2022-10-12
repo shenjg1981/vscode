@@ -5,12 +5,18 @@
 
 import { CharCode } from 'vs/base/common/charCode';
 
+
+// 按decimalPoints保留位数，对浮点数进行四舍五入
 function roundFloat(number: number, decimalPoints: number): number {
 	const decimal = Math.pow(10, decimalPoints);
 	return Math.round(number * decimal) / decimal;
 }
 
+// RGBA, HSLA, HSVA, Color
+
+// Alpha是float
 export class RGBA {
+	// ???
 	_rgbaBrand: void = undefined;
 
 	/**
@@ -34,10 +40,11 @@ export class RGBA {
 	readonly a: number;
 
 	constructor(r: number, g: number, b: number, a: number = 1) {
-		this.r = Math.min(255, Math.max(0, r)) | 0;
+		// 用或 | 操作，在实际应用中，我们可以实现向下取整，即int = num | 0，因为位运算是对整数操作的，当遇到浮点型的数值时，会先将浮点型的数据转成整型，然后再进行或运算
+		this.r = Math.min(255, Math.max(0, r)) | 0; // 浮点数转整数
 		this.g = Math.min(255, Math.max(0, g)) | 0;
 		this.b = Math.min(255, Math.max(0, b)) | 0;
-		this.a = roundFloat(Math.max(Math.min(1, a), 0), 3);
+		this.a = roundFloat(Math.max(Math.min(1, a), 0), 3); // 保留三位小数
 	}
 
 	static equals(a: RGBA, b: RGBA): boolean {
@@ -304,6 +311,7 @@ export class Color {
 	}
 
 	equals(other: Color | null): boolean {
+		// 如果只是RGBA，为什么需要转换再比较？可能是为了实现简单，这样就可以比较一个RGBA和一个HSLA
 		return !!other && RGBA.equals(this.rgba, other.rgba) && HSLA.equals(this.hsla, other.hsla) && HSVA.equals(this.hsva, other.hsva);
 	}
 
@@ -472,6 +480,7 @@ export class Color {
 		return of.darken(factor);
 	}
 
+	// 常用颜色
 	static readonly white = new Color(new RGBA(255, 255, 255, 1));
 	static readonly black = new Color(new RGBA(0, 0, 0, 1));
 	static readonly red = new Color(new RGBA(255, 0, 0, 1));
